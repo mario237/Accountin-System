@@ -131,8 +131,7 @@ class AccountDetailTypeSeeder extends Seeder
             'Preferred shares',
             'Retained Earnings',
             'Share capital',
-            'Treasury Shares',
-            ''
+            'Treasury Shares'
         ];
 
 

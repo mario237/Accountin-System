@@ -2,43 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AccountTypesRequest;
+use App\Http\Traits\ApiResponse;
 use App\Models\AccountType;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class AccountTypesController extends Controller
 {
-    public function index()
+    use ApiResponse;
+
+    public function index(): JsonResponse
     {
-        //
+
+        return $this->successResponse(AccountType::all());
+
     }
 
-    public function create()
+
+    public function store(AccountTypesRequest $request): JsonResponse
     {
-        //
+        AccountType::create([
+            'name' => $request->name,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        return $this->successMessage('Account is added successfully');
     }
 
-    public function store(Request $request)
+
+    public function update(AccountTypesRequest $request, AccountType $accountType): JsonResponse
     {
-        //
+
+      AccountType::findOrFail($accountType->id)->update([
+          'name' => $request->name,
+          'updated_at' => now()
+      ]);
+
+        return $this->successMessage('Account is updated Successfully');
     }
 
-    public function show(AccountType $accountType)
+    public function destroy(AccountType $accountType): JsonResponse
     {
-        //
-    }
+        AccountType::findOrFail($accountType->id)->delete();
 
-    public function edit(AccountType $accountType)
-    {
-        //
-    }
-
-    public function update(Request $request, AccountType $accountType)
-    {
-        //
-    }
-
-    public function destroy(AccountType $accountType)
-    {
-        //
+        return $this->successMessage('Account is deleted successfully');
     }
 }

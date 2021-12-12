@@ -16,11 +16,11 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
-/**
- * @method errorResponse(string $string, int $HTTP_NOT_FOUND)
- */
+
 class Handler extends ExceptionHandler
 {
+    use ApiResponse;
+
     /**
      * A list of the exception types that are not reported.
      *
@@ -66,24 +66,24 @@ class Handler extends ExceptionHandler
                 if ($exception instanceof ModelNotFoundException) {
                     $model = strtolower(class_basename($exception->getModel()));
 
-                    return $this->errorResponse("Does not exist any instance of {$model} with the given id", Response::HTTP_NOT_FOUND);
+                    return $this->errorResponse("Does not exist any instance of $model with the given id", ResponseAlias::HTTP_NOT_FOUND);
                 }
 
                 if ($exception instanceof AuthorizationException) {
 
-                    return $this->errorResponse($exception->getMessage(), Response::HTTP_FORBIDDEN);
+                    return $this->errorResponse($exception->getMessage(), ResponseAlias::HTTP_FORBIDDEN);
                 }
 
                 if ($exception instanceof AuthenticationException) {
 
-                    return $this->errorResponse($exception->getMessage(), Response::HTTP_UNAUTHORIZED);
+                    return $this->errorResponse($exception->getMessage(), ResponseAlias::HTTP_UNAUTHORIZED);
                 }
 
                 if ($exception instanceof ValidationException) {
                     $errors = $exception->validator->errors()->first();
 
 
-                    return $this->errorResponse($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+                    return $this->errorResponse($errors, ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
                 if ($exception instanceof ClientException) {
@@ -93,10 +93,13 @@ class Handler extends ExceptionHandler
                     return $this->errorResponse($message, $code);
                 }
 
-                    return  $this->errorResponse($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+                    return  $this->errorResponse($exception->getMessage(), ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
             }
 
+            return  $this->errorResponse($exception->getMessage(), ResponseAlias::HTTP_BAD_REQUEST);
         });
+
+
     }
 
 }

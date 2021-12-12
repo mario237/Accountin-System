@@ -29,7 +29,7 @@ trait ApiResponse
     public function successResponse($data): JsonResponse
     {
         return response()->json([
-            'message'=> 'success', $data
+            'message'=> 'success', 'data' => $data
         ]);
     }
 
