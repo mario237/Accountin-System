@@ -31,7 +31,7 @@ class AccountTypesTest extends TestCase
     public function testAddAccountType(): JsonResponse
     {
         $response = $this->withHeader('Content-Type' , 'application/json')
-            ->post('api/account-types' , [
+            ->post('api/accounting/account-types' , [
                 'name'  => 'Accounts receivable (A/R)'  , 'created_at' => now() , 'updated_at' => now()
             ]);
 

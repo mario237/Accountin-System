@@ -1,5 +1,6 @@
 <?php
 
+
 use App\Http\Controllers\AccountTypesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::apiResources([
-    'account-types' => AccountTypesController::class,
-    ]);
+Route::group(['prefix' => 'accounting'] , function (){
+    Route::apiResource('account-types' , AccountTypesController::class);
+});
+
