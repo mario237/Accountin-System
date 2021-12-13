@@ -26,10 +26,10 @@ trait ApiResponse
 
 
 
-    public function successResponse($data): JsonResponse
+    public function successResponse($data ,$message = 'success'): JsonResponse
     {
         return response()->json([
-            'message'=> 'success', 'data' => $data
+            'message'=> $message, 'data' => $data
         ]);
     }
 

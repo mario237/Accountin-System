@@ -2,50 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Actions\DeleteAccountTypeAction;
+use App\Http\Actions\IndexAccountTypeAction;
+use App\Http\Actions\StoreAccountTypeAction;
+use App\Http\Actions\UpdateAccountTypeAction;
+use App\Http\DTO\AccountTypesDTO;
 use App\Http\Requests\AccountTypesRequest;
 use App\Http\Traits\ApiResponse;
-use App\Models\AccountType;
 use Illuminate\Http\JsonResponse;
 
 class AccountTypesController extends Controller
 {
     use ApiResponse;
 
-    public function index(): JsonResponse
+    public function index(IndexAccountTypeAction $action): JsonResponse
     {
-
-        return $this->successResponse(AccountType::all());
-
+        return $action();
     }
 
 
-    public function store(AccountTypesRequest $request): JsonResponse
+    public function store(AccountTypesRequest $request, StoreAccountTypeAction $action): JsonResponse
     {
-        AccountType::create([
-            'name' => $request->name,
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
 
-        return $this->successMessage('Account is added successfully');
+        $dto = new AccountTypesDTO($request->name);
+
+        return $action($dto);
     }
 
 
-    public function update(AccountTypesRequest $request, AccountType $accountType): JsonResponse
+    public function update($id, AccountTypesRequest $request, UpdateAccountTypeAction $action): JsonResponse
     {
 
-      AccountType::findOrFail($accountType->id)->update([
-          'name' => $request->name,
-          'updated_at' => now()
-      ]);
 
-        return $this->successMessage('Account is updated Successfully');
+        $dto = new AccountTypesDTO($request->name);
+
+        return $action($id, $dto);
     }
 
-    public function destroy(AccountType $accountType): JsonResponse
+    public function destroy($id, DeleteAccountTypeAction $action): JsonResponse
     {
-        AccountType::findOrFail($accountType->id)->delete();
-
-        return $this->successMessage('Account is deleted successfully');
+        return $action($id);
     }
 }
